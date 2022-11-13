@@ -1,0 +1,228 @@
+jshell> Stream.of(1,2,3).count()
+$1 ==> 3
+
+jshell> Stream.of(1,2,3).reduce(0,Integer::sum)
+$2 ==> 6
+
+jshell> List<Integer> num = List.of(1,2,3)
+num ==> [1, 2, 3]
+
+jshell> num.stream()
+$4 ==> java.util.stream.ReferencePipeline$Head@5a2e4553
+
+jshell> int num[] = {1,2,3};
+num ==> int[3] { 1, 2, 3 }
+
+jshell> Arrays.stream(num)
+$6 ==> java.util.stream.IntPipeline$Head@45ff54e6
+
+jshell> var res = Arrays.stream(num)
+res ==> java.util.stream.IntPipeline$Head@bebdb06
+
+jshell> res.sum()
+$8 ==> 6
+
+jshell> res
+res ==> java.util.stream.IntPipeline$Head@bebdb06
+
+
+jshell> num.sum()
+|  Error:
+|  cannot find symbol
+|    symbol:   method sum()
+|  num.sum()
+|  ^-----^
+
+jshell>
+
+jshell> int num[] = {1,2,3};
+num ==> int[3] { 1, 2, 3 }
+
+jshell> var res = Arrays.stream(num)
+res ==> java.util.stream.IntPipeline$Head@2a098129
+
+jshell> res.average()
+$15 ==> OptionalDouble[2.0]
+
+jshell> res.sum()
+|  Exception java.lang.IllegalStateException: stream has already been operated upon or closed
+|        at AbstractPipeline.evaluate (AbstractPipeline.java:229)
+|        at IntPipeline.reduce (IntPipeline.java:515)
+|        at IntPipeline.sum (IntPipeline.java:473)
+|        at (#16:1)
+
+jshell> List<Integer> numList = List.of(1,2,3)
+numList ==> [1, 2, 3]
+
+jshell> numList.stream().sum()
+|  Error:
+|  cannot find symbol
+|    symbol:   method sum()
+|  numList.stream().sum()
+|  ^------------------^
+
+jshell> numList.stream().count()
+$18 ==> 3
+
+jshell> IntStream.rangeClosed(1,10).count()
+$19 ==> 10
+
+jshell> IntStream.range(1,10).count()
+$20 ==> 9
+
+jshell> IntStream.range(1,10)
+$21 ==> java.util.stream.IntPipeline$Head@768debd
+
+jshell> IntStream.iterate(1, e -> e + 2).limit(4).peek(System.out::println).sum()
+1
+3
+5
+7
+$22 ==> 16
+
+jshell> IntStream.iterate(0, e -> e + 2).limit(4).peek(System.out::println).sum()
+0
+2
+4
+6
+$23 ==> 12
+
+jshell> IntStream.iterate(0, e -> e + 2).limit(4).boxed().collect(Collectors.toList())
+$24 ==> [0, 2, 4, 6]
+
+jshell> LONG.MIN_VALUE
+|  Error:
+|  cannot find symbol
+|    symbol:   variable LONG
+|  LONG.MIN_VALUE
+|  ^--^
+
+jshell> Long.MIN_VALUE
+$25 ==> -9223372036854775808
+
+jshell> LongStream.rangeClosed(1,50).reduce(1, (x,y) -> x * y)
+$26 ==> -3258495067890909184
+
+jshell> LongStream.rangeClosed(1,10).reduce(1, (x,y) -> x * y)
+$27 ==> 3628800
+
+jshell> LongStream.rangeClosed(1,10).mapToObj(BigInteger::valueOf).reduce(BigInteger.ONE, BIGINTEGER::multiply)
+|  Error:
+|  cannot find symbol
+|    symbol:   variable BIGINTEGER
+|  LongStream.rangeClosed(1,10).mapToObj(BigInteger::valueOf).reduce(BigInteger.ONE, BIGINTEGER::multiply)
+|                                                                                    ^--------^
+
+jshell> LongStream.rangeClosed(1,10).mapToObj(BigInteger::valueOf).reduce(BigInteger.ONE, BigInteger::multiply)
+$28 ==> 3628800
+
+jshell> LongStream.rangeClosed(1,50).mapToObj(BigInteger::valueOf).reduce(BigInteger.ONE, BigInteger::multiply)
+$29 ==> 30414093201713378043612608166064768844377641568960512000000000000
+
+
+
+courses.stream().flatMap(course -> courses2.stream().filter(cou2 -> cou2.length() == course.length()).map(course2 -> List.of(course,course2))).filter(cour -> !cour.get(0).equals(cour.get(1))).collect(Collectors.toList())
+
+jshell> List<String> courses = List.of("spring","springboot","hibernate","jpa","jdbc")
+courses ==> [spring, springboot, hibernate, jpa, jdbc]
+
+jshell> courses.stream().collect(Collectors.joining(",")
+   ...>
+   ...> )
+$2 ==> "spring,springboot,hibernate,jpa,jdbc"
+
+jshell> "spring".split("")
+$3 ==> String[6] { "s", "p", "r", "i", "n", "g" }
+
+
+jshell> courses.stream().map(course -> course.split("")).map(Arrays::stream).collect(Collectors.toList())
+$4 ==> [java.util.stream.ReferencePipeline$Head@23ab930d, java.util.stream.ReferencePipeline$Head@4534b60d, java.util.stream.ReferencePipeline$Head@3fa77460, java.util.stream.ReferencePipeline$Head@619a5dff, java.util.stream.ReferencePipeline$Head@1ed6993a]
+
+jshell> courses.stream().map(course -> course.split("")).flatMap(Arrays::stream).collect(Collectors.toList())
+$5 ==> [s, p, r, i, n, g, s, p, r, i, n, g, b, o, o, t, h, i, b, e, r, n, a, t, e, j, p, a, j, d, b, c]
+
+jshell> courses.stream().map(course -> course.split("")).flatMap(Arrays::stream).distinct().collect(Collectors.toList())
+$6 ==> [s, p, r, i, n, g, b, o, t, h, e, a, j, d, c]
+
+jshell> List<String> courses2 = List.of("spring","springboot","hibernate","jpa","jdbc")
+courses2 ==> [spring, springboot, hibernate, jpa, jdbc]
+
+jshell> courses.stream().flatMap(course -> courses2.stream().map(course2 -> List.of(course,course2))).collect(Collectors.     t())
+$8 ==> [[spring, spring], [spring, springboot], [spring, hibernate], [spring, jpa], [spring, jdbc], [springboot, spring], [springboot, springboot], [springboot, hibernate], [springboot, jpa], [springboot, jdbc], [hibernate, spring], [hibernate, springboot], [hibernate, hibernate], [hibernate, jpa], [hibernate, jdbc], [jpa, spring], [jpa, springboot], [jpa, hibernate], [jpa, jpa], [jpa, jdbc], [jdbc, spring], [jdbc, springboot], [jdbc, hibernate], [jdbc, jpa], [jdbc, jdbc]]
+                                                              ^-----------------------^
+
+jshell> courses.stream().flatMap(course -> courses2.stream().filter(cou -> cou.equals(course)).map(course2 -> List.of(course,course2))).collect(Collectors.toList())
+$9 ==> [[spring, spring], [springboot, springboot], [hibernate, hibernate], [jpa, jpa], [jdbc, jdbc]]
+
+jshell> courses.stream().flatMap(course -> courses2.stream().filter(cou -> !cou.equals(course)).map(course2 -> List.of(co rse,course2))).collect(Collectors.toList())
+$10 ==> [[spring, springboot], [spring, hibernate], [spring, jpa], [spring, jdbc], [springboot, spring], [springboot, hibernate], [springboot, jpa], [springboot, jdbc], [hibernate, spring], [hibernate, springboot], [hibernate, jpa], [hibernate, jdbc], [jpa, spring], [jpa, springboot], [jpa, hibernate], [jpa, jdbc], [jdbc, spring], [jdbc, springboot], [jdbc, hibernate], [jdbc, jpa]]
+
+jshell> courses.stream().flatMap(course -> courses2.stream().filter(cou -> cou.equals(course)).map(course2 -> Liscou -> cou.equals(course)).map(course2 -> List.of(course,course2))).collect(Collectors.toList())
+$11 ==> [[spring, spring], [springboot, springboot], [hibernate, hibernate], [jpa, jpa], [jdbc, jdbc]]
+
+jshell> courses.stream().flatMap(course -> courses2.stream().filter(cou -> !cou.equals(course)).map(course2 -> List.of(course,course2))).collect(Collectors.toList())
+$12 ==> [[spring, springboot], [spring, hibernate], [spring, jpa], [spring, jdbc], [springboot, spring], [springboot, hibernate], [springboot, jpa], [springboot, jdbc], [hibernate, spring], [hibernate, springboot], [hibernate, jpa], [hibernate, jdbc], [jpa, spring], [jpa, springboot], [jpa, hibernate], [jpa, jdbc], [jdbc, spring], [jdbc, springboot], [jdbc, hibernate], [jdbc, jpa]]
+
+                                                                                                        ^------------------
+jshell> courses.stream().flatMap(course -> courses2.stream().filter(cou -> !cou.equals(course)).map(course2 -> List.of(course,course2))).collect(Collectors.toList())
+$13 ==> [[spring, springboot], [spring, hibernate], [spring, jpa], [spring, jdbc], [springboot, spring], [springboot, hibernate], [springboot, jpa], [springboot, jdbc], [hibernate, spring], [hibernate, springboot], [hibernate, jpa], [hibernate, jdbc], [jpa, spring], [jpa, springboot], [jpa, hibernate], [jpa, jdbc], [jdbc, spring], [jdbc, springboot], [jdbc, hibernate], [jdbc, jpa]]
+
+
+jshell> courses.stream().flatMap(course -> courses2.stream().filter(cou -> !cou.equals(course)).map(course2 -> List.of(course,course2))).filter(listOfCourse -> listOfCourse.get(0).length() == listOfCourse.get(1)
+.length()).collect(Collectors.toList())
+$14 ==> []
+
+
+jshell> courses.stream().flatMap(course -> courses2.stream().filter(cou -> !cou.equals(course)).filter(cou2 -> cou2.length() == course.length()).map(course2 -> List.of(course,course2))).collect(Collectors.toList
+( )
+$1 ==> []
+
+jshell> courses.stream().flatMap(course -> courses2.stream().filter(cou2 -> cou2.length() == course.length()).map(course2 -> List.of(course,course2))).collect(Collectors.toList())
+$16 ==> [[spring, spring], [springboot, springboot], [hibernate, hibernate], [jpa, jpa], [jdbc, jdbc]]
+
+jshell> courses.stream().flatMap(course -> courses2.stream().filter(cou2 -> cou2.length() == course.length()).map(course2 -> List.of(course,course2))).filter(cour -> !cour.get(0).equals(cour.get(1))).collect(Col
+le              )
+$17 ==> []
+
+jshell> courses.stream().flatMap(course -> courses2.stream().filter(cou2 -> cou2.length() == course.length()).map(course2 -> List.of(course,course2))).filter(cour -> !cour.get(0).equals(cour.get(1))).collect(Collectors.toList())
+$18 ==> []
+
+jshell> List<String> courses2 = List.of("spring","springboot","hibernate","jpa","jdbc","docker")
+courses2 ==> [spring, springboot, hibernate, jpa, jdbc, docker]
+
+jshell> List<String> courses = List.of("spring","springboot","hibernate","jpa","jdbc","aws")
+courses ==> [spring, springboot, hibernate, jpa, jdbc, aws]
+
+jshell> courses.stream().flatMap(course -> courses2.stream().filter(cou2 -> cou2.length() == course.length()).map(course2 -> List.of(course,course2))).filter(cour -> !cour.get(0).equals(cour.get(1))).collect(Col
+lectors.toList())
+$21 ==> [[spring, docker], [aws, jpa]]
+
+jshell> courses.stream().filter(course -> course.length() > 5).map(String::toUpperCase).findFirst()
+$22 ==> Optional[SPRING]
+
+
+jshell> courses.stream().peek(System.out::println).filter(course -> course.length() > 5).map(String::toUpperCase).peek(System.out::println).findFirst()
+spring
+SPRING
+$23 ==> Optional[SPRING]
+
+jshell> courses.stream().peek(System.out::println).filter(course -> course.length() > 7).map(String::toUpperCase).peek(System.out::println).findFirst()
+spring
+springboot
+SPRINGBOOT
+$24 ==> Optional[SPRINGBOOT]
+
+
+jshell> List<String> courseList = new ArrayList<>(courses)
+courseList ==> [spring, springboot, hibernate, jpa, jdbc, aws]
+
+jshell> courseList.replaceAll(String::toUpperCase)
+
+jshell> courseList
+courseList ==> [SPRING, SPRINGBOOT, HIBERNATE, JPA, JDBC, AWS]
+
+jshell> courseList.removeIf(str -> str.length() < 4)
+$28 ==> true
+
+jshell> courseList
+courseList ==> [SPRING, SPRINGBOOT, HIBERNATE, JDBC]
